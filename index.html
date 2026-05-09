@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>萌宠翻牌配对 · 小动物乐园</title>
+    <title>马戏团·动物翻牌配对</title>
     <style>
         * {
             margin: 0;
@@ -15,25 +15,69 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(145deg, #f9e7d2 0%, #f5d0c5 100%);
-            font-family: system-ui, 'Segoe UI', 'Helvetica Neue', 'Noto Sans', sans-serif;
+            background: radial-gradient(circle at 10% 30%, #fdd98b, #f7b05e);
+            font-family: 'Segoe UI', 'Comic Neue', 'Chalkboard SE', system-ui, cursive;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
         }
 
-        /* 游戏主面板 */
+        /* 马戏团装饰元素：彩带 + 帐篷尖顶 */
+        body::before {
+            content: "🎪";
+            font-size: 70px;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            opacity: 0.3;
+            transform: rotate(-15deg);
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "🎭";
+            font-size: 60px;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            opacity: 0.3;
+            transform: rotate(10deg);
+            pointer-events: none;
+        }
+
+        /* 游戏主面板 - 马戏团大帐篷风格 */
         .game-container {
             width: 100%;
-            max-width: 550px;
+            max-width: 580px;
             margin: 0 auto;
-            background-color: rgba(255, 248, 235, 0.7);
-            backdrop-filter: blur(2px);
-            border-radius: 64px 64px 48px 48px;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1), 0 8px 12px rgba(0, 0, 0, 0.05);
+            background: #fff6e8;
+            background-image: repeating-linear-gradient(45deg, #ffeedd 0px, #ffeedd 2px, #ffe6d0 2px, #ffe6d0 8px);
+            border-radius: 80px 80px 60px 60px;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.25), inset 0 1px 4px rgba(255,255,200,0.8);
             padding: 20px 16px 28px;
+            border-bottom: 8px solid #e34d2b;
+            position: relative;
             transition: all 0.2s ease;
+        }
+
+        /* 帐篷飘旗装饰 */
+        .game-container::before {
+            content: "⚑ ⚐ ⚑";
+            font-size: 1.8rem;
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e34d2b;
+            color: #ffde9c;
+            padding: 4px 20px;
+            border-radius: 40px 40px 20px 20px;
+            letter-spacing: 8px;
+            text-shadow: 0 1px 0 #a22f12;
+            white-space: nowrap;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
 
         /* 头部区域 */
@@ -48,187 +92,203 @@
         }
 
         .game-title {
-            font-size: 1.9rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f6a7c1, #f9c45a);
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #e34d2b, #f7b05e, #ffda77);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 2px 2px 8px rgba(255,215,150,0.6);
-            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .game-title small {
-            font-size: 0.8rem;
-            font-weight: 400;
+        .game-title span {
+            font-size: 2rem;
             background: none;
-            color: #e28b6f;
             -webkit-background-clip: unset;
-            background-clip: unset;
-            display: inline-block;
-            margin-left: 6px;
+            color: #e34d2b;
+            text-shadow: none;
         }
 
         .reset-btn {
-            background-color: #ffcf9a;
+            background: #ffcd7e;
             border: none;
             font-size: 1.2rem;
             font-weight: bold;
-            padding: 8px 18px;
-            border-radius: 60px;
-            color: #aa6f4b;
-            box-shadow: 0 5px 0 #c2865b;
+            padding: 8px 20px;
+            border-radius: 100px;
+            color: #ac4a2a;
+            box-shadow: 0 5px 0 #b75733;
             cursor: pointer;
             transition: 0.08s linear;
             display: flex;
             align-items: center;
             gap: 8px;
-            backdrop-filter: blur(4px);
-            background: rgba(255, 220, 170, 0.95);
+            backdrop-filter: blur(2px);
+            font-family: inherit;
         }
 
         .reset-btn:active {
             transform: translateY(2px);
-            box-shadow: 0 2px 0 #c2865b;
+            box-shadow: 0 2px 0 #b75733;
         }
 
         /* 卡片网格 4x4 */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            gap: 14px;
             justify-items: center;
             align-items: center;
             margin-bottom: 20px;
-            padding: 4px;
+            padding: 6px;
         }
 
-        /* 卡片样式 */
+        /* 马戏团风格卡片：圆形+条纹边框 */
         .card {
             aspect-ratio: 1 / 1;
             width: 100%;
-            background-color: #ffe2c9;
-            background-image: radial-gradient(circle at 35% 30%, rgba(255,245,215,0.7) 2%, transparent 2.5%);
-            background-size: 18px 18px;
-            border-radius: 28px;
-            box-shadow: 0 12px 18px -6px rgba(0, 0, 0, 0.2), inset 0 -2px 0 rgba(0,0,0,0.05);
+            background: radial-gradient(circle at 30% 35%, #fff3b0, #ffe0a3);
+            background-image: repeating-linear-gradient(45deg, #ffd96622 0px, #ffd96622 5px, #ffb34722 5px, #ffb34722 12px);
+            border-radius: 30px 20px 30px 20px;
+            box-shadow: 0 12px 0 #b64a2a, 0 8px 12px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.12s ease, box-shadow 0.1s, background 0.2s;
-            font-size: 3.2rem;
+            transition: transform 0.1s ease, box-shadow 0.1s;
+            font-size: 3.3rem;
             font-weight: 500;
-            color: #7b4a2e;
+            color: #7a431d;
             transform: scale(1);
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+            border: 2px solid #ffc285;
         }
 
         .card:active {
             transform: scale(0.96);
-            box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 0 #b64a2a;
         }
 
+        /* 翻开/配对效果 */
         .card.revealed, .card.matched {
-            background: #fffaf2;
-            background-image: linear-gradient(145deg, #fff6ec, #ffefdf);
-            box-shadow: 0 8px 14px -6px rgba(0,0,0,0.15);
-            color: #af6b3e;
+            background: #fffaf0;
+            background-image: radial-gradient(circle at 20% 40%, #fff2cf, #ffefcf);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid #f7b05e;
+            color: #b1572e;
         }
 
         .card.matched {
-            background: linear-gradient(135deg, #fff0e0, #ffe6d5);
-            box-shadow: 0 0 0 2px #fbc490, 0 8px 16px -4px rgba(0,0,0,0.1);
+            background: linear-gradient(145deg, #fff3cf, #ffe2b5);
+            box-shadow: 0 0 0 3px #ffbc7a, 0 4px 10px rgba(0, 0, 0, 0.1);
             cursor: default;
-            filter: drop-shadow(0 2px 6px rgba(252,176,64,0.3));
+            filter: drop-shadow(0 2px 6px rgba(227,77,43,0.4));
+            border: 1px solid #ffb058;
         }
 
         .card.matched:active {
             transform: scale(1);
+            box-shadow: 0 0 0 3px #ffbc7a;
         }
 
-        /* 状态栏 */
+        /* 状态栏 马戏团票根样式 */
         .game-stats {
             text-align: center;
-            margin-top: 12px;
+            margin: 12px auto 0;
             font-size: 1.2rem;
-            font-weight: 600;
-            background: #ffedd9;
+            font-weight: bold;
+            background: #ffefcf;
             display: inline-block;
             width: auto;
             margin-left: auto;
             margin-right: auto;
             padding: 8px 24px;
-            border-radius: 80px;
-            color: #c47a54;
-            backdrop-filter: blur(4px);
-            box-shadow: inset 0 1px 4px #ffe0b5, 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 60px;
+            color: #bf542f;
+            font-family: monospace;
+            letter-spacing: 1px;
+            border: 2px dotted #ffb45e;
+            box-shadow: inset 0 1px 3px #ffe1aa, 0 4px 8px rgba(0,0,0,0.05);
         }
 
-        /* 二维码载体区域 */
+        /* 二维码区域 — 马戏团小丑彩带装饰 */
         .qr-carrier {
             margin-top: 24px;
-            padding-top: 16px;
-            border-top: 2px dashed rgba(244, 180, 130, 0.5);
+            padding-top: 18px;
+            border-top: 3px wavy #ffa75e;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+            position: relative;
+        }
+
+        .qr-carrier::before {
+            content: "🎪🎈";
+            font-size: 18px;
+            position: absolute;
+            top: -12px;
+            background: #fde9c9;
+            padding: 0 12px;
+            border-radius: 60px;
         }
 
         .qr-label {
             font-size: 0.85rem;
-            font-weight: 600;
-            background: #ffebd2;
+            font-weight: bold;
+            background: #ffddb0;
             display: inline-block;
-            padding: 4px 14px;
-            border-radius: 60px;
-            color: #c17a52;
+            padding: 4px 16px;
+            border-radius: 40px;
+            color: #b34b26;
             margin-bottom: 12px;
             letter-spacing: 1px;
+            border: 1px solid #ffb87a;
         }
 
         .qr-code-box {
-            background: white;
-            padding: 12px;
-            border-radius: 48px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+            background: #ffffffdd;
+            backdrop-filter: blur(1px);
+            padding: 10px;
+            border-radius: 40px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
             display: inline-block;
             margin-bottom: 8px;
+            border: 2px solid #ffb258;
         }
 
         .qr-code-box img {
-            width: 110px;
-            height: 110px;
+            width: 105px;
+            height: 105px;
             display: block;
-            border-radius: 28px;
+            border-radius: 24px;
             background: white;
         }
 
         .qr-tip {
-            font-size: 0.75rem;
-            color: #b5764c;
-            background: rgba(255,238,215,0.8);
-            padding: 6px 12px;
-            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #a35734;
+            background: #fff2e2;
+            padding: 5px 12px;
+            border-radius: 50px;
             max-width: 260px;
-            margin-top: 6px;
+            margin-top: 5px;
+            font-weight: 500;
         }
 
-        .qr-tip span {
-            font-weight: bold;
-            color: #e6864a;
-        }
-
-        /* 弹窗 */
+        /* 弹窗 - 马戏团幕布效果 */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(250, 215, 180, 0.85);
-            backdrop-filter: blur(5px);
+            background-color: rgba(210, 85, 45, 0.55);
+            backdrop-filter: blur(6px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -244,58 +304,61 @@
         }
 
         .modal-card {
-            background-color: #fff8f0;
-            max-width: 280px;
+            background: linear-gradient(145deg, #fff3e0, #ffe1bc);
+            max-width: 290px;
             width: 75%;
-            border-radius: 56px;
+            border-radius: 80px 50px 80px 50px;
             padding: 30px 20px 36px;
             text-align: center;
-            box-shadow: 0 30px 40px rgba(99, 57, 34, 0.3);
-            border: 2px solid #ffe2b5;
+            box-shadow: 0 30px 35px rgba(120, 45, 20, 0.4);
+            border: 4px solid #ffb562;
             animation: bouncePop 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);
         }
 
         @keyframes bouncePop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.7) rotate(-2deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
         .modal-card h3 {
             font-size: 2rem;
-            margin-bottom: 10px;
-            color: #e8956a;
+            margin-bottom: 8px;
+            color: #dd522b;
+            font-weight: 900;
         }
 
         .modal-card p {
-            font-size: 1.2rem;
-            margin: 16px 0 24px;
-            color: #ad6a45;
-            font-weight: 500;
+            font-size: 1.1rem;
+            margin: 16px 0 22px;
+            color: #9b4a2c;
+            font-weight: 600;
         }
 
         .modal-card button {
-            background: #ffcf8a;
+            background: #ffbc6e;
             border: none;
             padding: 12px 28px;
-            border-radius: 50px;
+            border-radius: 60px;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #7a4729;
-            box-shadow: 0 5px 0 #c2884b;
+            color: #823b1c;
+            box-shadow: 0 5px 0 #c05a33;
             cursor: pointer;
             transition: 0.05s linear;
+            font-family: inherit;
         }
 
         .modal-card button:active {
             transform: translateY(2px);
-            box-shadow: 0 2px 0 #c2884b;
+            box-shadow: 0 2px 0 #c05a33;
         }
 
         footer {
             text-align: center;
-            font-size: 0.7rem;
-            color: #e5b18b;
-            margin-top: 16px;
+            font-size: 0.65rem;
+            color: #cb754a;
+            margin-top: 18px;
+            font-style: italic;
         }
 
         @media (max-width: 480px) {
@@ -303,19 +366,19 @@
                 gap: 10px;
             }
             .card {
-                border-radius: 22px;
-                font-size: 2.3rem;
+                border-radius: 20px 14px 20px 14px;
+                font-size: 2.4rem;
             }
             .game-title {
                 font-size: 1.5rem;
             }
             .reset-btn {
-                padding: 6px 16px;
+                padding: 5px 16px;
                 font-size: 1rem;
             }
             .game-stats {
                 font-size: 1rem;
-                padding: 6px 20px;
+                padding: 6px 18px;
             }
             .qr-code-box img {
                 width: 90px;
@@ -329,44 +392,44 @@
 <div class="game-container">
     <div class="game-header">
         <div class="game-title">
-            🐾 萌宠翻翻乐 <small>小动物配对</small>
+            <span>🎪</span> 马戏团翻翻乐 <span>🎪</span>
         </div>
-        <button class="reset-btn" id="resetGameBtn">🔄 新的一局</button>
+        <button class="reset-btn" id="resetGameBtn">🎡 新的一局 🎠</button>
     </div>
 
     <div class="cards-grid" id="cardsGrid"></div>
 
     <div class="game-stats" id="pairStats">
-        🧸 配对进度: 0 / 8
+        🎟️ 配对进度: 0 / 8
     </div>
 
-    <!-- 二维码载体：扫一扫即可同玩 -->
+    <!-- 二维码载体 马戏团风格 提供扫一扫 -->
     <div class="qr-carrier" id="qrCarrierArea">
-        <div class="qr-label">📱 扫一扫 · 即开即玩</div>
+        <div class="qr-label">🎭 扫一扫 · 好友共玩 🎭</div>
         <div class="qr-code-box" id="qrCodeContainer">
-            <img id="dynamicQR" alt="游戏二维码" src="" style="width:110px; height:110px;">
+            <img id="dynamicQR" alt="游戏二维码" src="" style="width:105px; height:105px;">
         </div>
         <div class="qr-tip">
-            💡 用手机扫码，打开当前页面 → 好友一起挑战！<br>
-            <span>✨ 分享给小伙伴 ✨</span>
+            🤡 用手机扫码 → 立即进入马戏团<br>
+            🐘 一起配对可爱小动物！
         </div>
     </div>
-    <footer>🐣 点击卡片配对，找到相同的动物伙伴～</footer>
+    <footer>✨ 翻开卡片，找到相同的小动物明星 ✨</footer>
 </div>
 
 <!-- 通关弹窗 -->
 <div id="winModal" class="modal-overlay">
     <div class="modal-card">
-        <h3>🎉 完美通关 🎉</h3>
-        <p>所有小动物都找到伙伴啦 🌟</p>
-        <button id="modalResetBtn">✨ 再来一局 ✨</button>
+        <h3>🎉 精彩表演 🎉</h3>
+        <p>所有动物配对成功！马戏团为你喝彩🌟</p>
+        <button id="modalResetBtn">🎪 再来一次 🎪</button>
     </div>
 </div>
 
 <script>
     // ----------------------------- 游戏配置 ---------------------------------
-    // 全部换成小动物 emoji (8种可爱动物)
-    const PAIR_THEMES = ["🐱", "🐶", "🐰", "🦊", "🐻", "🐼", "🐨", "🐸"];
+    // 马戏团小动物阵营 (全部可爱动物emoji，符合主题)
+    const PAIR_THEMES = ["🐘", "🦁", "🐒", "🐧", "🐨", "🦝", "🐰", "🐢"];
     const TOTAL_PAIRS = 8;
     const TOTAL_CARDS = TOTAL_PAIRS * 2;
 
@@ -385,7 +448,7 @@
 
     // ----- 辅助函数 -----
     function updateStatsUI() {
-        pairStatsSpan.innerHTML = `🧸 配对进度: ${matchCount} / ${TOTAL_PAIRS}`;
+        pairStatsSpan.innerHTML = `🎟️ 配对进度: ${matchCount} / ${TOTAL_PAIRS}`;
     }
 
     function shuffleArray(arr) {
@@ -551,30 +614,32 @@
         updateStatsUI();
     }
 
-    // ---------- 二维码载体：生成可扫描的二维码 (完全无插件) ----------
+    // ---------- 二维码载体：可扫一扫，此版本保持动态生成当前页面URL（支持分享）----------
     function refreshQRCode() {
         const qrImg = document.getElementById('dynamicQR');
         if (!qrImg) return;
         let currentUrl = window.location.href;
         const isFileProtocol = currentUrl.startsWith('file://');
-        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(currentUrl)}`;
+        // 使用免费 QR 服务，生成二维码图片（无外部插件依赖）
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(currentUrl)}`;
         qrImg.src = qrApiUrl;
-        qrImg.alt = "游戏二维码";
+        qrImg.alt = "马戏团游戏二维码";
         const tipDiv = document.querySelector('.qr-tip');
         if (tipDiv) {
             if (isFileProtocol) {
-                tipDiv.innerHTML = `📌 当前为本地文件，二维码暂不可扫描。<br> 🚀 将本页面部署至<strong>任意Web服务器</strong>，扫码即可在好友手机上开玩！<br> 📱 扫一扫 · 完美载体`;
+                tipDiv.innerHTML = `📌 本地文件二维码暂无法扫描。将网页部署到服务器即可扫码同玩！<br> 🎪 马戏团期待你的分享 🎪`;
             } else {
-                tipDiv.innerHTML = `📱 扫码即玩当前游戏 · 分享给小伙伴一起配对！<br> ✨ 扫一扫二维码，打开本游戏 ✨`;
+                tipDiv.innerHTML = `🤡 扫码秒玩 · 和马戏团小动物一起配对！<br> 🎈 分享二维码给小伙伴 🎈`;
             }
         }
     }
 
+    // 页面加载完成后生成二维码
     window.addEventListener('load', () => {
         refreshQRCode();
     });
 
-    // 重置按钮 & 模态重置
+    // 重置 & 模态重置按钮逻辑
     resetBtn.addEventListener('click', () => {
         if (flipTimeout) clearTimeout(flipTimeout);
         resetAndNewGame();
@@ -583,6 +648,7 @@
         resetAndNewGame();
         winModal.classList.remove('active');
     });
+    // 点击弹窗背景关闭弹窗
     winModal.addEventListener('click', (e) => {
         if (e.target === winModal) {
             winModal.classList.remove('active');
@@ -600,7 +666,7 @@
         lockBoard = false;
         if (flipTimeout) clearTimeout(flipTimeout);
         winModal.classList.remove('active');
-        refreshQRCode();
+        refreshQRCode(); 
     })();
 </script>
 </body>
